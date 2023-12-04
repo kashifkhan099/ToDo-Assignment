@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App Using JavaScript </title>
+    <style>
+        body  {
+          font-family: Arial, sans-serif;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          margin: 0;
+          background-color: aquamarine;
+        }
+        #todo-list {
+          max-width: 400px;
+          width: 100%;
+        }
+        .todo-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px;
+          margin-bottom: 8px;
+          background-color: rebeccapurple;
+          border: 2px solid #e28484;
+          border-radius: 4px;
+        }
+        .edit-mode {
+          background-color: aquamarine;
+          border: 2px solid #52626e;
+        }
+        button {
+          cursor: pointer;
+        }
+      </style>
+</head>
+
+<body>
+    <h1>To Create Todo List Type here </h1>
+
+    <input type="text" id="todoInput">
+
+    <button id="addBtn" onclick="addTodo()">Add Todo</button>
+    <button id="saveBtn" style="display: none;">Save</button>
+    <button onclick="deleteAll()" id="deleteAllBtn" style="display: none;">Delete All</button>
+    <ol id="todoList">
+        <!-- <li>First todo <button>Edit</button> <button>Delete</button> </li> -->
+    </ol>
+
+    <script>
+        let addBtn = document.getElementById("addBtn");
+        let saveBtn = document.getElementById("saveBtn");
+        let todoList = document.getElementById("todoList");
+        let deleteAllBtn = document.getElementById("deleteAllBtn");
+        let editedLI = null;
+
+        function addTodo() {
+            let todoInput = document.getElementById("todoInput");
+            let todoInputValue = todoInput.value;
+
+            if (todoInputValue.trim()) {
+                // Creating LI tag
+                let createLi = document.createElement("li");
+                createLi.innerText = todoInputValue;
+
+                // Edit Button add in LI
+                let editBtn = document.createElement("button");
+                editBtn.innerText = "Edit";
+                createLi.appendChild(editBtn);
+                editBtn.setAttribute("class", "bg-red");
+
+                // Delete Button add in LI
+                let deleteBtn = document.createElement("button");
+                deleteBtn.innerText = "Delete";
+                createLi.appendChild(deleteBtn);
+
+                // append LI in OL list
+                todoList.appendChild(createLi);
+                deleteAllBtn.style.display = "inline-block";
+
+                // Delete LI
+                deleteBtn.addEventListener("click", function () {
+                    createLi.remove();
+                    if (todoList.children.length === 0) {
+                        deleteAllBtn.style.display = "none";
+                    }
+                });
+
+                // Edit LI
+                editBtn.addEventListener("click", function () {
+                    let forEditText = createLi.childNodes[0].nodeValue;
+                    todoInput.value = forEditText;
+                    saveBtn.style.display = "inline-block";
+                    addBtn.style.display = "none";
+                    editedLI = createLi;
+                });
+
+                // Save Edited Todo
+                saveBtn.addEventListener("click", function () {
+                    saveBtn.style.display = "none";
+                    addBtn.style.display = "inline-block";
+                    editedLI.childNodes[0].nodeValue = todoInput.value;
+                });
+            } else {
+                alert("Please Input Todo");
+            }
+
+            todoInput.value = "";
+        }
+
+        function deleteAll() {
+            console.log(todoList.children.length);
+            if (todoList.children.length > 0) {
+                todoList.innerHTML = null;
+            }
+            deleteAllBtn.style.display = "none";
+        }
+    </script>
+</body>
+</html>
+
+
